@@ -1,7 +1,7 @@
 ﻿using Raylib_CsLo;
 using System.Numerics;
 
-namespace HopeEngine.TestGame;
+namespace HopeEngine.ParticleTestGame;
 
 public struct Particle
 {
@@ -12,7 +12,7 @@ public struct Particle
 
 public unsafe class ParticleSystem : IUpdate, IDraw
 {
-    private const int _P_COUNT = 80000;
+    private const int _P_COUNT = 128000;
     private const int _P_SPAWN_RADIUS = 1000 * 2;
     private const int _P_MASS = 1;
     private const float _P_DRAG_FACTOR = 0.98f;
@@ -114,6 +114,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
 
     private void DrawParticles()
     {
+
         for (int i = 0; i < _P_COUNT / _divider; i++)
         {
             Raylib.DrawPixelV(Particles[i].Pos, Particles[i].Col);

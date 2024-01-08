@@ -1,6 +1,6 @@
 ﻿using Raylib_CsLo;
 
-namespace HopeEngine.TestGame;
+namespace HopeEngine.ParticleTestGame;
 
 public class FPSDrawer : IDraw
 {

@@ -1,6 +1,6 @@
 ﻿using Raylib_CsLo;
 
-namespace HopeEngine.TestGame;
+namespace HopeEngine.ParticleTestGame;
 
 public class ParticleTestGame : Game
 {
@@ -24,7 +24,5 @@ public class ParticleTestGame : Game
         var pm = new ParticleSystem();
         Engine.SortedUpdateQueue[CallOrder.Normal].EnqueueAddition(pm);
         Engine.SortedDrawQueue[CallOrder.Normal].EnqueueAddition(pm);
-
-
     }
 }

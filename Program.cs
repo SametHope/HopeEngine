@@ -1,5 +1,5 @@
 ﻿using HopeEngine;
-using HopeEngine.TestGame;
+using HopeEngine.ParticleTestGame;
 
 Engine.Setup();
 Engine.Start(new ParticleTestGame());
