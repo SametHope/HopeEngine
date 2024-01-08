@@ -1,7 +1,7 @@
 ﻿using Raylib_CsLo;
 using System.Numerics;
 
-namespace HopeEngine.ParticleTestGame;
+namespace HopeEngine.ParticleGame;
 
 public class ParticleGame : IGame
 {

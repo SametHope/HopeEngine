@@ -1,5 +1,5 @@
 ﻿using HopeEngine;
-using HopeEngine.ParticleTestGame;
+using HopeEngine.ParticleGame;
 
 Looper.IGame = new ParticleGame();
 Looper.Start();
