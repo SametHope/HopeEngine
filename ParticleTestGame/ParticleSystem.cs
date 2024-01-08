@@ -15,13 +15,12 @@ public unsafe class ParticleSystem : IUpdate, IDraw
     private const int _P_COUNT = 128000;
     private const int _P_SPAWN_RADIUS = 1000 * 2;
     private const int _P_MASS = 1;
-    private const float _P_DRAG_FACTOR = 0.98f;
+    private const float _P_DRAG_FACTOR = 0.02f;
 
     private static readonly Particle[] Particles = new Particle[_P_COUNT];
 
     private bool _shouldDrawParticles = true;
     private int _divider = 2;
-
     public DrawMode DrawMode => DrawMode.World;
 
     public ParticleSystem()
@@ -37,13 +36,17 @@ public unsafe class ParticleSystem : IUpdate, IDraw
             Particles[i].Pos = Engine.GetScreenCenter() + ParticleUtils.GetRandomPointInCircle(_P_SPAWN_RADIUS);
             //Particles[i].Col = ParticleUtils.GetRandomColor();
             Particles[i].Col = Raylib.RAYWHITE;
-        }
+            Particles[i].Vel = Vector2.Zero;
+        }        
     }
 
     public void Update(float deltaTime)
     {
         // Toggle draw if needed
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_D)) _shouldDrawParticles = !_shouldDrawParticles;
+
+        // Restart draw if needed
+        if (Raylib.IsKeyPressed(KeyboardKey.KEY_R)) InitializeParticles();
 
         // Reduct draw calls if needed
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_DOWN)) _divider = _divider * 2;
@@ -57,7 +60,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
         // Setup click force factor
         float clickForceFactor;
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT)) clickForceFactor = 100f;
-        else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = -25f;
+        else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = -17.5f;
         else clickForceFactor = 0f;
 
         // Cache mouse position
@@ -71,10 +74,12 @@ public unsafe class ParticleSystem : IUpdate, IDraw
             if (Distance == 0) continue;
 
             // Apply attraction
-            Particles[i].Vel += ParticleUtils.GetAttraction(mp, 10f, Particles[i].Pos, _P_MASS, 3f, 1.3f, 0) * clickForceFactor;
+            Particles[i].Vel += ParticleUtils.GetAttraction(mp, 10f, Particles[i].Pos, _P_MASS, 4f, 1.35f, 0) * clickForceFactor;
 
-            // Apply drag and velocity changes
-            Particles[i].Vel += -Particles[i].Vel * _P_DRAG_FACTOR * deltaTime;
+            // Apply drag 
+            Particles[i].Vel += -Particles[i].Vel * _P_DRAG_FACTOR;
+
+            // Use velocity
             Particles[i].Pos += Particles[i].Vel * deltaTime;
         }
     }
@@ -104,6 +109,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
             $"Use right click to repel particles",
             $"Press up to increase draw calls",
             $"Press down to decrease draw calls",
+            $"Press r to restart",
             };
 
         for (int i = 0; i < lines.Length; i++)
@@ -129,6 +135,18 @@ public static class ParticleUtils
         return new Color(Raylib.GetRandomValue(0, 255), Raylib.GetRandomValue(0, 255), Raylib.GetRandomValue(0, 255), 255);
     }
 
+    public static Color LerpColor(Color start, Color end, float t)
+    {
+        t = Math.Max(0, Math.Min(1, t)); // Ensure t is in the [0, 1] range
+
+        byte r = (byte)Math.Round(start.r + t * (end.r - start.r));
+        byte g = (byte)Math.Round(start.g + t * (end.g - start.g));
+        byte b = (byte)Math.Round(start.b + t * (end.b - start.b));
+        byte a = (byte)Math.Round(start.a + t * (end.a - start.a));
+
+        return new Color(r, g, b, a);
+    }
+
     public static Vector2 GetRandomPointInCircle(float radius = 1f)
     {
         double angleInRadians = Raylib.GetRandomValue(0, 360) * Math.PI / 180.0;
@@ -146,5 +164,6 @@ public static class ParticleUtils
         var gaDist = gaDir.Length();
 
         return Vector2.Normalize(gaDir) * gForce * ((mass * oMass) / (gaDist * pVal) + extraF);
+        //return Vector2.Normalize(gaDir) * gForce * ((mass * oMass) / MathF.Pow(gaDist, pVal) + extraF);
     }
 }
