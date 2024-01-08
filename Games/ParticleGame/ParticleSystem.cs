@@ -32,7 +32,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
         for (int i = 0; i < _P_COUNT; i++)
         {
             // Set particle positions to a random circle at the center of the screen
-            Particles[i].Pos = ParticleGame.ScreenCenter + ParticleUtils.GetRandomPointInCircle(_P_SPAWN_RADIUS);
+            Particles[i].Pos = ParticleGame.WindowCenter + ParticleUtils.GetRandomPointInCircle(_P_SPAWN_RADIUS);
             //Particles[i].Col = ParticleUtils.GetRandomColor();
             Particles[i].Col = Raylib.RAYWHITE;
             Particles[i].Vel = Vector2.Zero;
@@ -79,7 +79,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
             Particles[i].Vel += -Particles[i].Vel * _P_DRAG_FACTOR;
 
             // Use velocity
-            Particles[i].Pos += Particles[i].Vel * Looper.FrameTime;
+            Particles[i].Pos += Particles[i].Vel * ParticleGame.FrameTime;
         }
     }
 
@@ -101,7 +101,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
 
         string[] lines =
             {
-            $"{Raylib.GetFPS()} : {Looper.FrameTime}ms",
+            $"{ParticleGame.FPS} : {ParticleGame.FrameTime}ms",
             $"Drawing {_P_COUNT/_divider} / {_P_COUNT} particles",
             $"Press d to toggle draw calls",
             $"Use left click to attract particles",
