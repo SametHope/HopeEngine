@@ -2,9 +2,9 @@
 
 namespace HopeEngine.TestGame;
 
-public class TestGame : Game
+public class ParticleTestGame : Game
 {
-    public override string WindowTitle => "Test Game";
+    public override string WindowTitle => "Particle Test Game";
 
     public override int WindowWidth => 1280;
 
@@ -14,11 +14,9 @@ public class TestGame : Game
 
     public override Color BackgroundColor => Raylib.BLACK;
 
-    public TestGame()
+    public ParticleTestGame()
     {
         Raylib.SetExitKey(KeyboardKey.KEY_ESCAPE);
-
-        Engine.SortedDrawQueue[CallOrder.Late].EnqueueAddition(new FPSDrawer());
     }
 
     public override void LoadGame()

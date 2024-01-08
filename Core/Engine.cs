@@ -82,6 +82,7 @@ public static class Engine
 
         Game = game;
 
+        OnGameStartAttribute.InvokeMethodsOnAllInstances();
         game.LoadGame();
 
         // Process all addition requests from queues in the correct order

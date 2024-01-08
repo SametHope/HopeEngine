@@ -2,4 +2,4 @@
 using HopeEngine.TestGame;
 
 Engine.Setup();
-Engine.Start(new TestGame());
+Engine.Start(new ParticleTestGame());
