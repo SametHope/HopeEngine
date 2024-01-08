@@ -1,9 +1,11 @@
 ﻿using System.Collections;
+
 namespace HopeEngine;
 
 /// <summary>
 /// Represents a custom data structure that combines the characteristics of a list and a queue.
 /// Allows enqueuing additions and removals, which are processed later to modify the main list.
+/// <see cref="IEnumerable{T}"/> interface returns the enumarator for the main list.
 /// </summary>
 /// <typeparam name="T">The type of elements in the list.</typeparam>
 public class QueueList<T> : IEnumerable<T>

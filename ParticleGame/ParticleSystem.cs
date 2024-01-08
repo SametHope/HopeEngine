@@ -21,7 +21,6 @@ public unsafe class ParticleSystem : IUpdate, IDraw
 
     private bool _shouldDrawParticles = true;
     private int _divider = 2;
-    public DrawMode DrawMode => DrawMode.World;
 
     public ParticleSystem()
     {
@@ -33,14 +32,14 @@ public unsafe class ParticleSystem : IUpdate, IDraw
         for (int i = 0; i < _P_COUNT; i++)
         {
             // Set particle positions to a random circle at the center of the screen
-            Particles[i].Pos = Engine.GetScreenCenter() + ParticleUtils.GetRandomPointInCircle(_P_SPAWN_RADIUS);
+            Particles[i].Pos = ParticleGame.ScreenCenter + ParticleUtils.GetRandomPointInCircle(_P_SPAWN_RADIUS);
             //Particles[i].Col = ParticleUtils.GetRandomColor();
             Particles[i].Col = Raylib.RAYWHITE;
             Particles[i].Vel = Vector2.Zero;
         }        
     }
 
-    public void Update(float deltaTime)
+    public void Update()
     {
         // Toggle draw if needed
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_D)) _shouldDrawParticles = !_shouldDrawParticles;
@@ -64,7 +63,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
         else clickForceFactor = 0f;
 
         // Cache mouse position
-        Vector2 mp = Engine.MouseScreenPosition;
+        Vector2 mp = ParticleGame.MouseScreenPosition;
 
         for (int i = 0; i < _P_COUNT; i++)
         {
@@ -80,7 +79,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
             Particles[i].Vel += -Particles[i].Vel * _P_DRAG_FACTOR;
 
             // Use velocity
-            Particles[i].Pos += Particles[i].Vel * deltaTime;
+            Particles[i].Pos += Particles[i].Vel * Looper.FrameTime;
         }
     }
 
@@ -102,7 +101,7 @@ public unsafe class ParticleSystem : IUpdate, IDraw
 
         string[] lines =
             {
-            $"{Raylib.GetFPS()} : {Engine.DeltaTime}ms",
+            $"{Raylib.GetFPS()} : {Looper.FrameTime}ms",
             $"Drawing {_P_COUNT/_divider} / {_P_COUNT} particles",
             $"Press d to toggle draw calls",
             $"Use left click to attract particles",
