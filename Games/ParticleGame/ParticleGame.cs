@@ -6,9 +6,9 @@ namespace HopeEngine.ParticleGame;
 public class ParticleGame : IGame
 {
     public static string WindowTitle => "The 'Particle Game'";
-    public static int WindowWidth => 1280;
-    public static int WindowHeight => 720;
-    public static int TargetFPS => 120;
+    public static int WindowWidth { get; private set; } = 1280;
+    public static int WindowHeight { get; private set; } = 720;
+    public static int TargetFPS { get; private set; } = 120;
     public static Vector2 WindowCenter => new Vector2(WindowWidth / 2, WindowHeight / 2);
     public static Vector2 MouseScreenPosition { get; private set; }
     public static float FrameTime { get; private set; }
@@ -35,9 +35,30 @@ public class ParticleGame : IGame
 
     public void Update()
     {
+        // Setup frame variables
         MouseScreenPosition = Raylib.GetMousePosition();
         FPS = Raylib.GetFPS();
         FrameTime = Raylib.GetFrameTime();
+
+        // Handle screen size changes
+        if (Raylib.IsKeyPressed(KeyboardKey.KEY_F11))
+        {
+            if(WindowWidth == 1280 && WindowHeight == 720 && !Raylib.IsWindowFullscreen())
+            {
+                WindowWidth = 1920;
+                WindowHeight = 1080;
+                Raylib.SetWindowSize(WindowWidth, WindowHeight);
+                Raylib.ToggleFullscreen();
+            }
+            else
+            {
+                WindowWidth = 1280;
+                WindowHeight = 720;
+                Raylib.SetWindowSize(WindowWidth, WindowHeight);
+                Raylib.ToggleFullscreen();
+            }
+            _system = new ParticleSystem();
+        }
 
         _system.Update();
     }
