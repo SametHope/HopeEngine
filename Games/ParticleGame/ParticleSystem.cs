@@ -55,6 +55,8 @@ public class ParticleSystem : IUpdate, IDraw
         else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = -17.5f;
         else clickForceFactor = 0f;
 
+        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = 10f;
+
         // Cache mouse position
         Vector2 mp = ParticleGame.MouseScreenPosition;
 
