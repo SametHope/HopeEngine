@@ -5,7 +5,7 @@ namespace HopeEngine.ParticleGame;
 
 public class ParticleSystem : IUpdate, IDraw
 {
-    private const int _P_COUNT = 128000;
+    private const int _P_COUNT = 128000 * 2;
     private const int _P_SPAWN_RADIUS = 1000 * 2;
     private const int _P_MASS = 1;
     private const float _P_DRAG_FACTOR = 0.02f;
@@ -13,7 +13,7 @@ public class ParticleSystem : IUpdate, IDraw
     private static readonly Particle[] Particles = new Particle[_P_COUNT];
 
     private bool _shouldDrawParticles = true;
-    private int _divider = 2;
+    private int _divider = 2 * 2;
 
     public ParticleSystem()
     {
