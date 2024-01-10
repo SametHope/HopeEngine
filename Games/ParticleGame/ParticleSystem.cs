@@ -61,8 +61,6 @@ public class ParticleSystem : IUpdate, IDraw
         // Cache mouse position
         Vector2 mp = ParticleGame.MouseScreenPosition;
 
-        var sw = Stopwatch.StartNew();
-
         Parallel.For(0, _P_COUNT, i =>
         {
             // Skip particles that are exactly at the same position just in case
@@ -79,9 +77,6 @@ public class ParticleSystem : IUpdate, IDraw
             // Use velocity
             Particles[i].Pos += Particles[i].Vel * ParticleGame.FrameTime;
         });
-
-        sw.Stop();
-        Console.WriteLine($"Update Frame Took {sw.Elapsed}");
     }
 
     public void Draw()
@@ -120,7 +115,6 @@ public class ParticleSystem : IUpdate, IDraw
 
     private void DrawParticles()
     {
-
         for (int i = 0; i < _P_COUNT / _divider; i++)
         {
             Raylib.DrawPixelV(Particles[i].Pos, Particles[i].Col);
