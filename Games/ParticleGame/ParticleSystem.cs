@@ -1,4 +1,5 @@
 ﻿using Raylib_CsLo;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace HopeEngine.ParticleGame;
@@ -60,12 +61,14 @@ public class ParticleSystem : IUpdate, IDraw
         // Cache mouse position
         Vector2 mp = ParticleGame.MouseScreenPosition;
 
-        for (int i = 0; i < _P_COUNT; i++)
+        var sw = Stopwatch.StartNew();
+
+        Parallel.For(0, _P_COUNT, i =>
         {
             // Skip particles that are exactly at the same position just in case
             // so we dont 0/0 or other things that may result with NaN
             var Distance = Vector2.Distance(mp, Particles[i].Pos);
-            if (Distance == 0) continue;
+            if (Distance == 0) return;
 
             // Apply attraction
             Particles[i].Vel += ParticleUtils.GetAttraction(mp, 10f, Particles[i].Pos, _P_MASS, 4f, 1.35f, 0) * clickForceFactor;
@@ -75,7 +78,10 @@ public class ParticleSystem : IUpdate, IDraw
 
             // Use velocity
             Particles[i].Pos += Particles[i].Vel * ParticleGame.FrameTime;
-        }
+        });
+
+        sw.Stop();
+        Console.WriteLine($"Update Frame Took {sw.Elapsed}");
     }
 
     public void Draw()
