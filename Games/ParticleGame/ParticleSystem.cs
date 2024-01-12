@@ -1,5 +1,4 @@
 ﻿using Raylib_CsLo;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace HopeEngine.ParticleGame;
@@ -30,7 +29,7 @@ public class ParticleSystem : IUpdate, IDraw
             //Particles[i].Col = ParticleUtils.GetRandomColor();
             Particles[i].Col = Raylib.RAYWHITE;
             Particles[i].Vel = Vector2.Zero;
-        }        
+        }
     }
 
     public void Update()
@@ -68,7 +67,7 @@ public class ParticleSystem : IUpdate, IDraw
 
         // This could be way nicer but it is ok I like it to be more explicit
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = 10f;
-        
+
         return clickForceFactor;
     }
 

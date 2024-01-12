@@ -5,7 +5,7 @@ namespace HopeEngine.ParticleGame;
 
 public class ParticleGame : IGame
 {
-    public const string VERSION = "1.1.4";
+    public const string VERSION = "1.1.5";
     public static string WindowTitle => $"The '{nameof(ParticleGame)}' {VERSION}";
     public static int WindowWidth { get; set; } = 1280;
     public static int WindowHeight { get; set; } = 720;
