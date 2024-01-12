@@ -1,5 +1,4 @@
 ﻿using Raylib_CsLo;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace HopeEngine.ParticleGame;
@@ -16,6 +15,26 @@ public class ParticleSystem : IUpdate, IDraw
     private bool _shouldDrawParticles = true;
     private int _divider = 2 * 2;
 
+    private static readonly Dictionary<int, (Vector2 aPos, float aForce)> Attractors = new();
+    private void TryAttractorChange(KeyboardKey key, int id, Vector2 mp, float leftF, float rightF)
+    {
+        if (Raylib.IsKeyDown(key))
+        {
+            if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
+            {
+                Attractors[id] = (mp, leftF);
+            }
+            else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT))
+            {
+                Attractors[id] = (mp, rightF);
+            }
+            else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_MIDDLE))
+            {
+                if (Attractors.ContainsKey(id)) Attractors.Remove(id);
+            }
+        }
+    }
+
     public ParticleSystem()
     {
         InitializeParticles();
@@ -30,7 +49,7 @@ public class ParticleSystem : IUpdate, IDraw
             //Particles[i].Col = ParticleUtils.GetRandomColor();
             Particles[i].Col = Raylib.RAYWHITE;
             Particles[i].Vel = Vector2.Zero;
-        }        
+        }
     }
 
     public void Update()
@@ -50,16 +69,20 @@ public class ParticleSystem : IUpdate, IDraw
             if (_divider < 1) _divider = 1;
         }
 
-        // Setup click force factor
-        float clickForceFactor;
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT)) clickForceFactor = 100f;
-        else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = -17.5f;
-        else clickForceFactor = 0f;
-
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = 10f;
-
         // Cache mouse position
         Vector2 mp = ParticleGame.MouseScreenPosition;
+
+        // 1
+        TryAttractorChange(KeyboardKey.KEY_ONE, 1, mp, 100f, -100f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_TWO, 2, mp, 100f, -100f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_THREE, 3, mp, 100f, -100f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_FOUR, 4, mp, 100f, -100f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_FIVE, 5, mp, 100f, -100f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_SIX, 6, mp, 250f, -250f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_SEVEN, 7, mp, 250f, -250f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_EIGHT, 8, mp, 250f, -250f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_NINE, 9, mp, 500f, -500f / 1f);
+        TryAttractorChange(KeyboardKey.KEY_ZERO, 0, mp, 1000f, -1000f / 1f);
 
         Parallel.For(0, _P_COUNT, i =>
         {
@@ -68,8 +91,13 @@ public class ParticleSystem : IUpdate, IDraw
             var Distance = Vector2.Distance(mp, Particles[i].Pos);
             if (Distance == 0) return;
 
+            foreach (var kvp in Attractors)
+            {
+                Particles[i].Vel += ParticleUtils.GetAttraction(kvp.Value.aPos, 10f, Particles[i].Pos, _P_MASS, 4f, 1.35f, 0) * kvp.Value.aForce;
+            }
+
             // Apply attraction
-            Particles[i].Vel += ParticleUtils.GetAttraction(mp, 10f, Particles[i].Pos, _P_MASS, 4f, 1.35f, 0) * clickForceFactor;
+            //Particles[i].Vel += ParticleUtils.GetAttraction(mp, 10f, Particles[i].Pos, _P_MASS, 4f, 1.35f, 0) * clickForceFactor;
 
             // Apply drag 
             Particles[i].Vel += -Particles[i].Vel * _P_DRAG_FACTOR;
@@ -84,7 +112,9 @@ public class ParticleSystem : IUpdate, IDraw
         DrawTexts();
         if (_shouldDrawParticles)
         {
+            DrawAttractors();
             DrawParticles();
+            DrawAttractorLabels();
         }
     }
 
@@ -118,6 +148,21 @@ public class ParticleSystem : IUpdate, IDraw
         for (int i = 0; i < _P_COUNT / _divider; i++)
         {
             Raylib.DrawPixelV(Particles[i].Pos, Particles[i].Col);
+        }
+    }
+
+    private void DrawAttractors()
+    {
+        foreach (var kvp in Attractors)
+        {
+            Raylib.DrawCircleV(kvp.Value.aPos, MathF.Abs(kvp.Value.aForce) / 20 + 1, kvp.Value.aForce > 0 ? Raylib.RED : Raylib.BLUE);
+        }
+    }
+    private void DrawAttractorLabels()
+    {
+        foreach (var kvp in Attractors)
+        {
+            Raylib.DrawText(kvp.Key.ToString(), (int)kvp.Value.aPos.X, (int)kvp.Value.aPos.Y, 16, Raylib.GREEN);
         }
     }
 }
