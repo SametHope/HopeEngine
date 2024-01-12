@@ -16,6 +16,9 @@ public class WindowResizeAgent : IUpdate
     public void Update()
     {
         // Handle screen size changes
+        // Note that resizing the window can take time which is afaik not possible to detect 
+        // so we end up calling the action too early quite often and not en up not reflecting the changes properly
+        // but I don't really care
         if (Raylib.IsKeyPressed(_resizeKey))
         {
             if (ParticleGame.WindowWidth == 1280 && ParticleGame.WindowHeight == 720 && !Raylib.IsWindowFullscreen())

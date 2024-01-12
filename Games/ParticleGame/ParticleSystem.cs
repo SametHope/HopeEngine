@@ -18,10 +18,10 @@ public class ParticleSystem : IUpdate, IDraw
 
     public ParticleSystem()
     {
-        InitializeParticles();
+        ResetParticles();
     }
 
-    private void InitializeParticles()
+    private void ResetParticles()
     {
         for (int i = 0; i < _P_COUNT; i++)
         {
@@ -35,13 +35,21 @@ public class ParticleSystem : IUpdate, IDraw
 
     public void Update()
     {
+        ProcessInputs();
+
+        float clickForceFactor = CalculateClickForceFactor();
+        UpdateParticleForces(clickForceFactor);
+    }
+
+    private void ProcessInputs()
+    {
         // Toggle draw if needed
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_D)) _shouldDrawParticles = !_shouldDrawParticles;
 
-        // Restart draw if needed
-        if (Raylib.IsKeyPressed(KeyboardKey.KEY_R)) InitializeParticles();
+        // Reset if needed
+        if (Raylib.IsKeyPressed(KeyboardKey.KEY_R)) ResetParticles();
 
-        // Reduct draw calls if needed
+        // Modify draw calls if needed
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_DOWN)) _divider = _divider * 2;
         else if (Raylib.IsKeyPressed(KeyboardKey.KEY_UP))
         {
@@ -49,16 +57,24 @@ public class ParticleSystem : IUpdate, IDraw
             _divider = _divider / 2;
             if (_divider < 1) _divider = 1;
         }
+    }
 
-        // Setup click force factor
+    private float CalculateClickForceFactor()
+    {
         float clickForceFactor;
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT)) clickForceFactor = 100f;
         else if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = -17.5f;
         else clickForceFactor = 0f;
 
+        // This could be way nicer but it is ok I like it to be more explicit
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT)) clickForceFactor = 10f;
+        
+        return clickForceFactor;
+    }
 
-        // Cache mouse position
+    private void UpdateParticleForces(float clickForceFactor)
+    {
+        // Cache mouse position just in case
         Vector2 mp = ParticleGame.MouseScreenPosition;
 
         Parallel.For(0, _P_COUNT, i =>
@@ -81,30 +97,32 @@ public class ParticleSystem : IUpdate, IDraw
 
     public void Draw()
     {
-        DrawTexts();
         if (_shouldDrawParticles)
         {
             DrawParticles();
         }
+        DrawTexts();
     }
 
     private void DrawTexts()
     {
-        int fontSize = 16;
+        int fontSize = 15;
         int lineHeight = fontSize + 2;
         int baseX = 10;
         int baseY = 10;
 
         string[] lines =
             {
-            $"{ParticleGame.FPS} : {ParticleGame.FrameTime}ms",
+            $"{ParticleGame.FPS} FPS : {ParticleGame.FrameTime} ms",
             $"Drawing {_P_COUNT/_divider} / {_P_COUNT} particles",
             $"Press d to toggle draw calls",
             $"Use left click to attract particles",
             $"Use right click to repel particles",
             $"Press up to increase draw calls",
             $"Press down to decrease draw calls",
-            $"Press r to restart",
+            $"Press r to reset particles",
+            $"Press f11 to resize the window",
+            $"Press escape to quit",
             };
 
         for (int i = 0; i < lines.Length; i++)
