@@ -22,8 +22,13 @@ public static class Looper
     {
         Debug.Assert(IGame != null, "Game is not set.");
 
-        IGame?.Initialize();
-        IGame?.Start();
+        if(IGame == null || IGame?.ReadyGame() == false)
+        {
+            return;
+        }
+
+        IGame?.InitializeWindow();
+        IGame?.StartGame();
 
         Debug.Assert(IsWindowReady(), "Raylib window is not initialized.");
 
@@ -38,6 +43,6 @@ public static class Looper
             EndDrawing();
         }
 
-        IGame?.Deinitialize();
+        IGame?.DeinitializeWindow();
     }
 }

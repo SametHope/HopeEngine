@@ -19,19 +19,24 @@ public class ParticleGame : IGame
     private ParticleSystem _system;
     private WindowResizeAgent _resizeAgent;
 
-    public void Initialize()
+    public bool ReadyGame()
+    {
+        return true;
+    }
+
+    public void InitializeWindow()
     {
         Raylib.InitWindow(WindowWidth, WindowHeight, WindowTitle);
         Raylib.SetExitKey(KeyboardKey.KEY_ESCAPE);
         Raylib.SetTargetFPS(TargetFPS);
     }
 
-    public void Deinitialize()
+    public void DeinitializeWindow()
     {
         Raylib.CloseWindow();
     }
 
-    public void Start()
+    public void StartGame()
     {
         _system = new ParticleSystem();
         _resizeAgent = new WindowResizeAgent(KeyboardKey.KEY_F11, () => _system = new ParticleSystem());

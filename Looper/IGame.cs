@@ -2,8 +2,9 @@
 
 public interface IGame : IUpdate, IDraw 
 {
-    public void Initialize();
-    public void Start();
-    public void Deinitialize();
+    public bool ReadyGame();
+    public void InitializeWindow();
+    public void StartGame();
+    public void DeinitializeWindow();
 }
 

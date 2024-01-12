@@ -18,19 +18,25 @@ public class PowerGame : IGame
     public static readonly QueueList<(string id, IUpdate iface)> UpdateQueueList = new();
     public static readonly QueueList<(string id, IDraw iface)> DrawQueueList = new();
 
-    public void Initialize()
+    public bool ReadyGame()
+    {
+        Console.WriteLine($"{nameof(PowerGame)} is not playable.");
+        return false;
+    }
+
+    public void InitializeWindow()
     {
         Raylib.InitWindow(WindowWidth, WindowHeight, WindowTitle);
         Raylib.SetExitKey(KeyboardKey.KEY_ESCAPE);
         Raylib.SetTargetFPS(TargetFPS);
     }
 
-    public void Deinitialize()
+    public void DeinitializeWindow()
     {
         Raylib.CloseWindow();
     }
 
-    public void Start()
+    public void StartGame()
     {
         UpdateQueueList.EnqueueAddition(("DBG", new DebugInputHandler()));
     }
