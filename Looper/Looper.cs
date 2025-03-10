@@ -6,7 +6,7 @@ namespace HopeEngine;
 using static Raylib;
 
 /// <summary>
-/// Provides the means to start the games main loop.
+/// Provides the means to start the games main update loop which includes handling draw and update callbacks and initializing the game.
 /// </summary>
 public static class Looper
 {
@@ -22,7 +22,7 @@ public static class Looper
     {
         Debug.Assert(IGame != null, "Game is not set.");
 
-        if(IGame == null || IGame?.ReadyGame() == false)
+        if (IGame == null || IGame?.ReadyGame() == false)
         {
             return;
         }
