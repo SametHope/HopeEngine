@@ -22,6 +22,8 @@ public class ParticleSystem : IUpdate, IDraw
 
     private void ResetParticles()
     {
+        Raylib.SetMousePosition((int)ParticleGame.WindowCenter.X, (int)ParticleGame.WindowCenter.Y);
+
         for (int i = 0; i < _P_COUNT; i++)
         {
             // Set particle positions to a random circle at the center of the screen
