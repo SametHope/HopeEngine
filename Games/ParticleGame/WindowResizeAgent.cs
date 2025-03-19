@@ -25,16 +25,15 @@ public class WindowResizeAgent : IUpdate
             {
                 ParticleGame.WindowWidth = 1920;
                 ParticleGame.WindowHeight = 1080;
-                Raylib.SetWindowSize(ParticleGame.WindowWidth, ParticleGame.WindowHeight);
-                Raylib.ToggleFullscreen();
             }
             else
             {
                 ParticleGame.WindowWidth = 1280;
                 ParticleGame.WindowHeight = 720;
-                Raylib.SetWindowSize(ParticleGame.WindowWidth, ParticleGame.WindowHeight);
-                Raylib.ToggleFullscreen();
             }
+
+            Raylib.ToggleFullscreen();
+            Raylib.SetWindowSize(ParticleGame.WindowWidth, ParticleGame.WindowHeight);
 
             _onResize?.Invoke();
         }
